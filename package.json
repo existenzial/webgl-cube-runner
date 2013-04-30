@@ -1,0 +1,17 @@
+{
+    "name": "cs174a",
+    "version": "1.0.0",
+    "description": "Group project for UCLA CS 174A",
+    "contributors": [
+        {"name": "Nate Emerson"},
+        {"name": "Casey Patton"},
+        {"name": "Dylan Vassallo"}
+    ],
+    "dependencies": {
+        "express": "3.2"
+    },
+    "engines": {
+        "node": "0.10"
+    },
+    "private": true
+}
