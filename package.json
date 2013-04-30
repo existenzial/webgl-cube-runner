@@ -11,6 +11,8 @@
         "connect-mobile-detection": "0.0.3",
         "consolidate": "0.9",
         "express": "3.2",
+        "faye": "0.8",
+        "open": "0.0.3",
         "underscore": "1.4.4"
     },
     "engines": {
