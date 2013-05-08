@@ -12,11 +12,15 @@ app.use(express.static(__dirname + "/public"));
 app.engine("html", consolidate.underscore);
 
 app.get("/", mobile(), function(req, res) {
-    if (req.mobile) {
-        res.render("controller.html", {message: "controller"});
-    } else {
-        res.render("game.html", {message: "game"});
-    }
+    res.redirect(req.mobile ? "/controller" : "/game");
+});
+
+app.get("/controller", function(req, res) {
+    res.render("controller.html", {});
+});
+
+app.get("/game", function(req, res) {
+    res.render("game.html", {message: "game"});
 });
 
 var httpServer = app.listen(app.get("port"));
