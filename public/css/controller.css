@@ -14,7 +14,7 @@ body, #status {
     text-align: center;
 }
 
-#status.success {
+#status.info {
     background-color: #DFF0D8;
 }
 

@@ -1,14 +1,24 @@
 var StatusView = Backbone.View.extend({
     template: _.template('<div id="status" class="<%= state %>"><%= message %></div>'),
-    states: { SUCCESS: "success", WARNING: "warning", ERROR: "error" },
+    states: { INFO: "info", WARNING: "warning", ERROR: "error" },
 
     initialize: function() {
-        this.update(this.states.WARNING, "initialized");
+        this.info("initialized");
     },
 
-    update: function(state, message) {
+    info: function(message) {
         console.log("status: " + message);
-        this.render(state, message);
+        this.render(this.states.INFO, message);
+    },
+
+    warning: function(message) {
+        console.warn("status: " + message);
+        this.render(this.states.WARNING, message);
+    },
+
+    error: function(message) {
+        console.error("status: " + message);
+        this.render(this.states.ERROR, message);
     },
 
     render: function(state, message) {
@@ -26,37 +36,37 @@ var App = {
         self.orientationMessage = _.template("alpha: <%= alpha %><br/>beta: <%= beta %><br/>gamma: <%= gamma %>");
 
         if (!window.DeviceOrientationEvent) {
-            self.statusView.update(self.statusView.ERROR, "unsupported");
+            self.statusView.error("unsupported");
             return;
         }
 
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubConnected = true;
         self.pubsubSubscription = self.pubsubClient.subscribe("/game", self.onPubsubMessage);
-        self.statusView.update(self.statusView.states.WARNING, "subscribing");
+        self.statusView.info("subscribing");
 
         self.pubsubSubscription.callback(function() {
-            self.statusView.update(self.statusView.states.SUCCESS, "subscribed");
-
-            self.pubsubClient.bind("transport:up", function() {
-                self.pubsubConnected = true;
-                self.statusView.update(self.statusView.states.SUCCESS, "subscribed");
-            });
-
-            self.pubsubClient.bind("transport:down", function() {
-                self.pubsubConnected = false;
-                self.statusView.update(self.statusView.states.ERROR, "disconnected");
-            });
+            self.statusView.info("subscribed");
 
             $(window).on("deviceorientation", _.throttle(
                 _.bind(self.onDeviceOrientationEvent, self),
                 self.maxUpdateIntervalMs
             ));
-            self.statusView.update(self.statusView.states.SUCCESS, "listening");
+            self.statusView.info("listening");
+
+            self.pubsubClient.bind("transport:down", function() {
+                self.pubsubConnected = false;
+                self.statusView.error("disconnected");
+            });
+
+            self.pubsubClient.bind("transport:up", function() {
+                self.pubsubConnected = true;
+                self.statusView.info("listening");
+            });
         });
 
         self.pubsubSubscription.errback(function() {
-            self.statusView.update(self.statusView.states.ERROR, "subscription failed");
+            self.statusView.error("subscribe failed");
         });
     },
 
@@ -75,7 +85,7 @@ var App = {
 
         console.log("orientation: " + JSON.stringify(displayData));
         if (this.pubsubConnected) {
-            this.statusView.update(this.statusView.states.SUCCESS, this.orientationMessage(displayData));
+            this.statusView.info(this.orientationMessage(displayData));
         }
 
         this.pubsubClient.publish("/controller", data);
