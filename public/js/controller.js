@@ -3,10 +3,11 @@ var StatusView = Backbone.View.extend({
     states: { SUCCESS: "success", WARNING: "warning", ERROR: "error" },
 
     initialize: function() {
-        this.update(this.states.WARNING, "Connecting");
+        this.update(this.states.WARNING, "initialized");
     },
 
     update: function(state, message) {
+        console.log("status: " + message);
         this.render(state, message);
     },
 
@@ -16,6 +17,28 @@ var StatusView = Backbone.View.extend({
     }
 });
 
+var App = {
+    initialize: function() {
+        var self = this;
+        self.statusView = new StatusView({el: $("#status-view")});
+        self.pubsubClient = new Faye.Client("/pubsub");
+        self.pubsubSubscription = self.pubsubClient.subscribe("/game", self.pubsubMessage);
+        self.statusView.update(self.statusView.states.WARNING, "subscribing");
+        self.pubsubSubscription.callback(function() {
+            self.statusView.update(self.statusView.states.SUCCESS, "subscribed");
+            // ...
+        });
+        self.pubsubSubscription.errback(function() {
+            self.statusView.update(self.statusView.states.ERROR, "subscription failed");
+        });
+    },
+
+    pubsubMessage: function(message) {
+        console.log("pubsub: " + message);
+    }
+};
+
 $(function() {
-    var statusView = new StatusView({el: $("#status-view")});
+    window.App = App;
+    App.initialize();
 });
