@@ -1,6 +1,5 @@
 var StatusView = Backbone.View.extend({
-    template: _.template('<div id="status" class="<%= state %>"><%= message %></div>'),
-    states: { INFO: "info", WARNING: "warning", ERROR: "error" },
+    template: _.template('<div id="status" class="<%= type %>"><%= message %></div>'),
 
     initialize: function() {
         this.info("initialized");
@@ -8,21 +7,21 @@ var StatusView = Backbone.View.extend({
 
     info: function(message) {
         console.log("status: " + message);
-        this.render(this.states.INFO, message);
+        this.render("info", message);
     },
 
     warning: function(message) {
         console.warn("status: " + message);
-        this.render(this.states.WARNING, message);
+        this.render("warning", message);
     },
 
     error: function(message) {
         console.error("status: " + message);
-        this.render(this.states.ERROR, message);
+        this.render("error", message);
     },
 
-    render: function(state, message) {
-        this.$el.html(this.template({state: state, message: message}));
+    render: function(type, message) {
+        this.$el.html(this.template({type: type, message: message}));
         return this;
     }
 });
