@@ -76,7 +76,11 @@ var App = {
 
     onDeviceOrientationEvent: function(event) {
         var data = _.pick(event.originalEvent, "alpha", "beta", "gamma");
-        if (_.contains(_.values(data), null)) { return; }
+
+        if (_.contains(_.values(data), null)) {
+            this.statusView.error("unsupported");
+            return;
+        }
 
         var displayData = data;
         _.each(displayData, function(value, key, object) {
