@@ -67,14 +67,17 @@ var App = {
     onDeviceOrientationEvent: function(event) {
         var data = _.pick(event.originalEvent, "alpha", "beta", "gamma");
         if (_.contains(_.values(data), null)) { return; }
+
         var displayData = data;
         _.each(displayData, function(value, key, object) {
             object[key] = parseFloat(value).toFixed(1);
         });
+
         console.log("orientation: " + JSON.stringify(displayData));
         if (this.pubsubConnected) {
             this.statusView.update(this.statusView.states.SUCCESS, this.orientationMessage(displayData));
         }
+
         this.pubsubClient.publish("/controller", data);
     }
 };
