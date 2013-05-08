@@ -23,6 +23,11 @@ var App = {
 
         self.statusView = new StatusView({el: $("#status-view")});
 
+        if (!window.DeviceOrientationEvent) {
+            self.statusView.update(self.statusView.ERROR, "unsupported");
+            return;
+        }
+
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubSubscription = self.pubsubClient.subscribe("/game", self.pubsubMessage);
         self.statusView.update(self.statusView.states.WARNING, "subscribing");
