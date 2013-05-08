@@ -22,6 +22,7 @@ var App = {
         var self = this;
 
         self.statusView = new StatusView({el: $("#status-view")});
+        self.maxUpdateIntervalMs = 100;
         self.orientationMessage = _.template("alpha: <%= alpha %><br/>beta: <%= beta %><br/>gamma: <%= gamma %>");
 
         if (!window.DeviceOrientationEvent) {
@@ -47,7 +48,10 @@ var App = {
                 self.statusView.update(self.statusView.states.ERROR, "disconnected");
             });
 
-            $(window).on("deviceorientation", _.bind(self.onDeviceOrientationEvent, self));
+            $(window).on("deviceorientation", _.throttle(
+                _.bind(self.onDeviceOrientationEvent, self),
+                self.maxUpdateIntervalMs
+            ));
             self.statusView.update(self.statusView.states.SUCCESS, "listening");
         });
 
