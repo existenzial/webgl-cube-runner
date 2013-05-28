@@ -36,6 +36,9 @@ var ControllerModel = Backbone.Model.extend({
 
 var GameView = Backbone.View.extend({
     initialize: function() {
+        this.$el.attr("width",  this.$el.css("width"));
+        this.$el.attr("height", this.$el.css("height"));
+
         window.requestAnimFrame = (function() {
             return window.requestAnimationFrame       ||
                    window.webkitRequestAnimationFrame ||
