@@ -417,11 +417,9 @@ Scene.prototype.drawCube = function() {
     this.app.GL.bindTexture(this.app.GL.TEXTURE_2D, this.app.glassTexture);
     this.app.GL.uniform1i(this.app.program.samplerUniform, 0);
 
-    this.app.GL.blendFunc(this.app.GL.SRC_ALPHA, this.app.GL.ONE);
-    this.app.GL.enable(this.app.GL.BLEND);
-    this.app.GL.disable(this.app.GL.DEPTH_TEST);
+    this.app.GL.enable(this.app.GL.DEPTH_TEST);
 
-    var alpha = 0.6;
+    var alpha = 1.0;
     this.app.GL.uniform1f(this.app.program.alphaUniform, alpha);
 
     this.app.GL.uniform3f(
