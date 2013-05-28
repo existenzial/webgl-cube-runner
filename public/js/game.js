@@ -384,9 +384,27 @@ Scene.prototype.initialize = function() {
 
 Scene.prototype.initObjects = function() {
     for (var i = 0; i < 15; i++)
-        this.objects.push(new Cube(this, Math.floor(Math.random() * 20) - 10, 15 - Math.floor(Math.random() * 30)));
+        this.objects.push(new Cube(this, this.getValidObjectX(), 15 - Math.floor(Math.random() * 30)));
 };
 
+Scene.prototype.getValidObjectX = function() {
+    var valid = false;
+    var x;
+    while (valid === false)
+    {
+        x = Math.floor(Math.random() * 50) - 25 - this.playerX;
+        valid = true;
+        for (var obj in this.objects)
+        {
+            if (Math.abs(this.objects[obj].x - x) <= 2 && this.objects[obj].z < -30)
+            {
+                valid = false;
+                break;
+            }
+        }
+    }
+    return x;
+};
 Scene.prototype.draw = function() {
     this.app.GL.viewport(0, 0, this.app.viewport.width, this.app.viewport.height);
     this.app.GL.clear(this.app.GL.COLOR_BUFFER_BIT | this.app.GL.DEPTH_BUFFER_BIT);
@@ -472,7 +490,7 @@ Cube.prototype.animate = function() {
     if (this.z >= 5)
     {
         this.z = -35;
-        this.x = Math.floor(Math.random() * 20) - 10;
+        this.x = this.scene.getValidObjectX();
     }
 
 };
