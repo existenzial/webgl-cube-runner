@@ -41,7 +41,7 @@ var App = {
 
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubConnected = true;
-        self.pubsubSubscription = self.pubsubClient.subscribe("/game", _.bind(self.onPubsubMessage, this));
+        self.pubsubSubscription = self.pubsubClient.subscribe("/game", _.bind(self.onPubsubMessage, self));
         self.statusView.info("subscribing");
 
         self.pubsubSubscription.callback(function() {
