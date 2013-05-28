@@ -142,7 +142,7 @@ Application.prototype.initTextures = function() {
         applicationObject.bindTexture(applicationObject.glassTexture);
     };
 
-    this.glassTexture.image.src = "glass.gif";
+    this.glassTexture.image.src = "/img/glass.gif";
 };
 
 Application.prototype.pushModelViewMat = function() {
