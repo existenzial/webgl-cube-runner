@@ -2,7 +2,6 @@ var consolidate = require("consolidate"),
     express     = require("express"),
     faye        = require("faye"),
     mobile      = require("connect-mobile-detection"),
-    open        = require("open"),
     os          = require("os");
 
 var app = express();
@@ -20,11 +19,12 @@ app.get("/controller", function(req, res) {
 });
 
 app.get("/game", function(req, res) {
-    res.render("game.html", {message: "game"});
+    res.render("game.html", {});
 });
 
 var httpServer = app.listen(app.get("port"));
 var bayeux = new faye.NodeAdapter({mount: "/pubsub"});
 bayeux.attach(httpServer);
 
-open("http://" + os.hostname() + ":" + app.get("port"));
+var url = "http://" + os.hostname() + ":" + app.get("port");
+console.log(url);
