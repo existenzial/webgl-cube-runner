@@ -19,7 +19,7 @@ app.get("/controller", function(req, res) {
 });
 
 app.get("/game", function(req, res) {
-    res.render("game.html", {message: "game"});
+    res.render("game.html", {});
 });
 
 var httpServer = app.listen(app.get("port"));
