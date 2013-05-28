@@ -1,19 +1,3 @@
-//GOOGLE CODE
-
-//Provides requestAnimationFrame in a cross browser way.
-window.requestAnimFrame = (function() {
-    return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-            window.setTimeout(callback, 1000/60);
-        };
-})();
-
-//END GOOGLE CODE
-
 //Utility function to convert degrees to radians
 function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
@@ -96,8 +80,8 @@ Application.prototype.extractShader = function(shaderID) {
 //program with them
 Application.prototype.loadShaders = function() {
     //Extract shaders into variables
-    var fragmentShader = this.extractShader("frag-shader");
-    var vertexShader = this.extractShader("vert-shader");
+    var fragmentShader = this.extractShader("fragment-shader");
+    var vertexShader = this.extractShader("vertex-shader");
 
     //Create program with fragment and vertex shaders
     this.program = this.GL.createProgram();
@@ -495,11 +479,8 @@ Cube.prototype.animate = function() {
 
 };
 
-function webGLStart() {
-    //var canvas = document.getElementById("game-canvas");
-    //initGL(canvas);
-
-    app = new Application("game-canvas");
+function webGLStart(canvasId) {
+    app = new Application(canvasId);
     app.loadShaders();
     cubeRunnerScene = new Scene(app);
     cubeRunnerScene.initialize();
@@ -513,88 +494,3 @@ function webGLStart() {
 
     app.tick();
 }
-var StatusView = Backbone.View.extend({
-    initialize: function() {
-        this.info("initialized");
-    },
-
-    info: function(message) {
-        console.log("status: " + message);
-    },
-
-    warning: function(message) {
-        console.warn("status: " + message);
-    },
-
-    error: function(message) {
-        console.error("status: " + message);
-    }
-});
-
-var ControllerModel = Backbone.Model.extend({
-    initialize: function() {
-        this.set({
-            alpha: null,
-            beta:  null,
-            gamma: null
-        });
-    },
-
-    orientation: function() {
-        return {
-            compassDirection: this.get("alpha"),
-            tiltSideToSide:   this.get("beta"),
-            tiltFrontToBack:  this.get("gamma")
-        };
-    }
-});
-
-var App2 = {
-    initialize: function() {
-        var self = this;
-
-        self.statusView = new StatusView();
-        self.controllerModel = new ControllerModel();
-
-        self.pubsubClient = new Faye.Client("/pubsub");
-        self.pubsubConnected = true;
-        self.pubsubSubscription = self.pubsubClient.subscribe("/controller", _.bind(self.onPubsubMessage, self));
-        self.statusView.info("subscribing");
-
-        self.pubsubSubscription.callback(function() {
-            self.statusView.info("subscribed");
-
-            self.pubsubClient.bind("transport:down", function() {
-                self.pubsubConnected = false;
-                self.statusView.error("disconnected");
-            });
-
-            self.pubsubClient.bind("transport:up", function() {
-                self.pubsubConnected = true;
-                self.statusView.info("listening");
-            });
-        });
-
-        self.pubsubSubscription.errback(function() {
-            self.statusView.error("subscribe failed");
-        });
-    },
-
-    onPubsubMessage: function(message) {
-        console.log("pubsub: " + JSON.stringify(message));
-        this.controllerModel.set({
-            alpha: parseFloat(message.alpha),
-            beta:  parseFloat(message.beta),
-            gamma: parseFloat(message.gamma)
-        });
-    },
-
-    controllerOrientation: function() {
-        return this.controllerModel.orientation();
-    }
-};
-
-$(function() {
-    //window.App = App;
-    //App.initialize();
-});

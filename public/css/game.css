@@ -1,0 +1,9 @@
+body {
+    background-color: #CCCCCC;
+}
+
+#game-view {
+    width: 800px;
+    height: 500px;
+    border: none;
+}
