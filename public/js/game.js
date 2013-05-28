@@ -136,13 +136,13 @@ Application.prototype.bindTexture = function(texture) {
 //Initialize all textures for the application
 Application.prototype.initTextures = function() {
     var applicationObject = this;
-    this.glassTexture = app.GL.createTexture();
-    this.glassTexture.image = new Image();
-    this.glassTexture.image.onload = function () {
-        applicationObject.bindTexture(applicationObject.glassTexture);
+    this.texture = app.GL.createTexture();
+    this.texture.image = new Image();
+    this.texture.image.onload = function () {
+        applicationObject.bindTexture(applicationObject.texture);
     };
 
-    this.glassTexture.image.src = "/img/crate.gif";
+    this.texture.image.src = "/img/crate.gif";
 };
 
 Application.prototype.pushModelViewMat = function() {
@@ -414,7 +414,7 @@ Scene.prototype.drawCube = function() {
     this.app.GL.vertexAttribPointer(this.app.program.textureCoordAttribute, this.cubeTextureCoordsBuffer.itemSize, this.app.GL.FLOAT, false, 0, 0);
 
     this.app.GL.activeTexture(this.app.GL.TEXTURE0);
-    this.app.GL.bindTexture(this.app.GL.TEXTURE_2D, this.app.glassTexture);
+    this.app.GL.bindTexture(this.app.GL.TEXTURE_2D, this.app.texture);
     this.app.GL.uniform1i(this.app.program.samplerUniform, 0);
 
     this.app.GL.enable(this.app.GL.DEPTH_TEST);
