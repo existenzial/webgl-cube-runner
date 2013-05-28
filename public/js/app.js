@@ -64,6 +64,8 @@ var App = {
         self.controllerModel = new ControllerModel();
         self.gameView = new GameView({el: $("#game-view")});
 
+        window.getControllerOrientation = _.bind(self.controllerModel.orientation, self.controllerModel);
+
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubConnected = true;
         self.pubsubSubscription = self.pubsubClient.subscribe("/controller", _.bind(self.onPubsubMessage, self));
@@ -98,14 +100,9 @@ var App = {
             beta:  parseFloat(message.beta),
             gamma: parseFloat(message.gamma)
         });
-    },
-
-    controllerOrientation: function() {
-        return this.controllerModel.orientation();
     }
 };
 
 $(function() {
-    window.App = App;
     App.initialize();
 });
