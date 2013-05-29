@@ -56,14 +56,49 @@ var GameView = Backbone.View.extend({
     }
 });
 
+var ScoreModel = Backbone.Model.extend({
+    initialize: function() {
+        this.set("points", 0);
+    },
+
+    incrementScore: function(amount) {
+        if (!amount) { amount = 1; }
+        this.set("points", this.get("points") + amount);
+    }
+});
+
+var ScoreView = Backbone.View.extend({
+    template: _.template('<div id="score"><%= points %> <%= pointsMsg %></div>'),
+
+    initialize: function() {
+        this.listenTo(this.model, "change", this.render);
+    },
+
+    render: function() {
+        var context = this.model.attributes;
+        context.pointsMsg = context.points === 1 ? "point" : "points";
+        this.$el.html(this.template(context));
+        return this;
+    }
+});
+
 var App = {
     initialize: function() {
         var self = this;
 
-        self.statusView = new StatusView();
+        self.scoreModel = new ScoreModel();
         self.controllerModel = new ControllerModel();
-        self.gameView = new GameView({el: $("#game-view")});
 
+        self.statusView = new StatusView();
+        self.scoreView = new ScoreView({
+            el: $("#score-view"),
+            model: self.scoreModel
+        });
+        self.gameView = new GameView({
+            el: $("#game-view")
+        });
+
+        window.incrementScore = _.bind(self.scoreModel.incrementScore, self.scoreModel);
         window.getControllerOrientation = _.bind(self.controllerModel.orientation, self.controllerModel);
 
         self.pubsubClient = new Faye.Client("/pubsub");
@@ -85,6 +120,7 @@ var App = {
             });
 
             self.statusView.info("rendering");
+            self.scoreView.render();
             self.gameView.render();
         });
 

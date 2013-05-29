@@ -10,8 +10,12 @@ body {
     float: right;
 }
 
+#score {
+    font-size: 200%;
+}
+
 canvas {
-    margin-top: 40px;
+    margin-top: 20px;
     width: 100%;
     height: 400px;
 }
