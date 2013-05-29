@@ -432,8 +432,10 @@ Scene.prototype.draw = function() {
     mat4.translate(this.app.mvMat, [this.playerX, -3, -5.0]);
     for (var obj in this.objects)
     {
-        if (this.objects[obj].collide(this.playerX))
+        if (this.objects[obj].collide(this.playerX)) {
             this.paused = true;
+            stopIncrementingPoints();
+        }
         if (this.paused === false)
             this.objects[obj].animate();
         this.objects[obj].draw();

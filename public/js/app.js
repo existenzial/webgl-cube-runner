@@ -58,12 +58,17 @@ var GameView = Backbone.View.extend({
 
 var ScoreModel = Backbone.Model.extend({
     initialize: function() {
-        this.set("points", 0);
+        var self = this;
+        self.set("points", 0);
+        self.set("interval", setInterval(_.bind(self.incrementPoints, self), 100));
     },
 
-    incrementScore: function(amount) {
-        if (!amount) { amount = 1; }
-        this.set("points", this.get("points") + amount);
+    incrementPoints: function() {
+        this.set("points", this.get("points") + 1);
+    },
+
+    clearInterval: function() {
+        clearInterval(this.get("interval"));
     }
 });
 
@@ -98,7 +103,7 @@ var App = {
             el: $("#game-view")
         });
 
-        window.incrementScore = _.bind(self.scoreModel.incrementScore, self.scoreModel);
+        window.stopIncrementingPoints = _.bind(self.scoreModel.clearInterval, self.scoreModel);
         window.getControllerOrientation = _.bind(self.controllerModel.orientation, self.controllerModel);
 
         self.pubsubClient = new Faye.Client("/pubsub");
