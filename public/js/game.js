@@ -514,7 +514,7 @@ Cube.prototype.animate = function() {
 };
 
 Cube.prototype.collide = function(playerX) {
-    if (this.z >= 0 && Math.abs(this.x - playerX) < 1)
+    if (this.z >= 0 && Math.abs(this.x + playerX) < 1)
     {
         return true;
     }
