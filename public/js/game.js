@@ -197,11 +197,17 @@ Application.prototype.handleKeyUp = function(event) {
 };
 
 Application.prototype.handleKeys = function() {
-    if (currentlyPressedKeys[37]) {
+    // Left Cursor Key
+    if (currentlyPressedKeys[37] && this.mainScene.paused === false) {
         this.mainScene.playerX += 0.2;
     }
-    if (currentlyPressedKeys[39]) {
+    // Right Cursor Key
+    if (currentlyPressedKeys[39] && this.mainScene.paused === false) {
         this.mainScene.playerX -= 0.2;
+    }
+    // Space Bar
+    if (currentlyPressedKeys[32] && this.mainScene.paused === true) {
+        this.mainScene.restart();
     }
     if (currentlyPressedKeys[38]) {
         // Up cursor key
@@ -231,6 +237,7 @@ function Scene(application) {
     };
     this.objects = [];
     this.playerX = 0;
+    this.paused = false;
 }
 
 //Initializes a scene with the required buffers for a cube
@@ -383,8 +390,14 @@ Scene.prototype.initialize = function() {
 };
 
 Scene.prototype.initObjects = function() {
-    for (var i = 0; i < 25; i++)
+    for (var i = 0; i < 15; i++)
         this.objects.push(new Cube(this, this.getValidObjectX(), 5 - Math.floor(Math.random() * 45)));
+};
+
+Scene.prototype.restart = function() {
+    this.objects.length = 0;
+    this.initObjects();
+    this.paused = false;
 };
 
 Scene.prototype.getValidObjectX = function() {
@@ -405,6 +418,7 @@ Scene.prototype.getValidObjectX = function() {
     }
     return x;
 };
+
 Scene.prototype.draw = function() {
     this.app.GL.viewport(0, 0, this.app.viewport.width, this.app.viewport.height);
     this.app.GL.clear(this.app.GL.COLOR_BUFFER_BIT | this.app.GL.DEPTH_BUFFER_BIT);
@@ -418,7 +432,10 @@ Scene.prototype.draw = function() {
     mat4.translate(this.app.mvMat, [this.playerX, -3, -5.0]);
     for (var obj in this.objects)
     {
-        this.objects[obj].animate();
+        if (this.objects[obj].collide(this.playerX))
+            this.paused = true;
+        if (this.paused === false)
+            this.objects[obj].animate();
         this.objects[obj].draw();
     }
 };
@@ -494,7 +511,15 @@ Cube.prototype.animate = function() {
         this.z = -45;
         this.x = this.scene.getValidObjectX();
     }
+};
 
+Cube.prototype.collide = function(playerX) {
+    if (this.z >= 0 && Math.abs(this.x - playerX) < 1)
+    {
+        console.log(this.z);
+        return true;
+    }
+    return false;
 };
 
 function webGLStart(canvasId) {
