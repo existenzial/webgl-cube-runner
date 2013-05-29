@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Group project for UCLA CS 174A">
         <meta name="author" content="Nate Emerson, Casey Patton, Dylan Vassallo">
+        <link href="/css/bootstrap-2.3.2.min.css" rel="stylesheet">
         <link href="/css/game.css" rel="stylesheet">
         <script id="vertex-shader" type="x-shader/x-vertex">
             attribute vec3 aVertexPosition;
@@ -50,7 +51,22 @@
         </script>
     </head>
     <body>
-        <canvas id="game-view"></canvas>
+        <div class="container">
+            <div class="row">
+                <div class="span8 offset2">
+                    <div class="row" id="header">
+                        <img src="https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=<%= controllerUrlEncoded %>&choe=UTF-8&chld=|0"/>
+                        <h2>Cube Runner <small>by Nate Emerson, Casey Patton, and Dylan Vassallo</small></h2>
+                    </div>
+                    <div class="row">
+                        <div id="score-view"></div>
+                    </div>
+                    <div class="row">
+                        <canvas id="game-view"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script src="/pubsub/client.js"></script>
         <script src="/js/jquery-2.0.0.min.js"></script>
         <script src="/js/underscore-1.4.4.min.js"></script>
