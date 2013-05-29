@@ -413,7 +413,9 @@ Scene.prototype.draw = function() {
 
     mat4.identity(this.app.mvMat);
 
-    mat4.translate(this.app.mvMat, [this.playerX, 0.0, -5.0]);
+    //Add yaw to make camera look down
+    mat4.rotate(this.app.mvMat, degreesToRadians(15), [1, 0, 0]);
+    mat4.translate(this.app.mvMat, [this.playerX, -3, -5.0]);
     for (var obj in this.objects)
     {
         this.objects[obj].animate();
