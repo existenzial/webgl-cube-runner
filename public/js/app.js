@@ -18,19 +18,31 @@ var StatusView = Backbone.View.extend({
 
 var ControllerModel = Backbone.Model.extend({
     initialize: function() {
-        this.set({
-            alpha: null,
-            beta:  null,
-            gamma: null
+        var self = this;
+
+        self.set({alpha: null, beta: null, gamma: null});
+
+        var threshold     = 5.0,
+            leftArrowKey  = 37,
+            rightArrowKey = 39;
+
+        self.on("change:gamma", function(model, gamma) {
+            if (Math.abs(gamma) < threshold) {
+                self.triggerKeyEvent("keyup", leftArrowKey);
+                self.triggerKeyEvent("keyup", rightArrowKey);
+            } else {
+                self.triggerKeyEvent(
+                    "keyup",   gamma < 0 ? rightArrowKey : leftArrowKey);
+                self.triggerKeyEvent(
+                    "keydown", gamma < 0 ? leftArrowKey  : rightArrowKey);
+            }
         });
     },
 
-    orientation: function() {
-        return {
-            compassDirection: this.get("alpha"),
-            tiltSideToSide:   this.get("beta"),
-            tiltFrontToBack:  this.get("gamma")
-        };
+    triggerKeyEvent: function(eventType, keyCode) {
+        var keyEvent = $.Event(eventType);
+        keyEvent.keyCode = keyCode;
+        $(document).trigger(keyEvent);
     }
 });
 
@@ -107,13 +119,19 @@ var App = {
             self.scoreModel.incrementScore, self.scoreModel);
         window.resetScore = _.bind(
             self.scoreModel.resetScore, self.scoreModel);
-        window.getControllerOrientation = _.bind(
-            self.controllerModel.orientation, self.controllerModel);
 
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubConnected = true;
         self.pubsubSubscription = self.pubsubClient.subscribe(
-            "/controller", _.bind(self.onPubsubMessage, self));
+            "/controller",
+            function(message) {
+                self.controllerModel.set({
+                    alpha: parseFloat(message.alpha),
+                    beta:  parseFloat(message.beta),
+                    gamma: parseFloat(message.gamma)
+                });
+            }
+        );
         self.statusView.info("subscribing");
 
         self.pubsubSubscription.callback(function() {
@@ -136,14 +154,6 @@ var App = {
 
         self.pubsubSubscription.errback(function() {
             self.statusView.error("subscribe failed");
-        });
-    },
-
-    onPubsubMessage: function(message) {
-        this.controllerModel.set({
-            alpha: parseFloat(message.alpha),
-            beta:  parseFloat(message.beta),
-            gamma: parseFloat(message.gamma)
         });
     }
 };
