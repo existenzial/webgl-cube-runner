@@ -509,6 +509,7 @@ Cube.prototype.animate = function() {
     this.z += 0.5;
     if (this.z >= 5)
     {
+        incrementScore();
         this.z = -45;
         this.x = this.scene.getValidObjectX();
     }
