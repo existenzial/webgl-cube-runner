@@ -390,7 +390,8 @@ Scene.prototype.initialize = function() {
 };
 
 Scene.prototype.initObjects = function() {
-    for (var i = 0; i < 15; i++)
+    var NUM_CUBES = 9;
+    for (var i = 0; i < NUM_CUBES; i++)
         this.objects.push(new Cube(this, this.getValidObjectX(), 5 - Math.floor(Math.random() * 45)));
 };
 
