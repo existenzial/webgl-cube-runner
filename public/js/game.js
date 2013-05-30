@@ -385,6 +385,63 @@ Scene.prototype.initialize = function() {
     this.cubeIndexBuffer.itemSize = 1;
     this.cubeIndexBuffer.numItems = 36;
 
+    //CASEY, INITIALIZE PLAYER
+    this.playerPositionsBuffer = this.app.GL.createBuffer();
+    this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerPositionsBuffer);
+    var vertices = [
+    // Front face
+     0.0,  0.0,  0.0,
+     0.0, -1.0,  0.0,
+     1.0, -1.0,  0.0,
+
+    // Right face
+     0.0,  0.0,  0.0,
+     1.0, -1.0,  1.0,
+     1.0, -1.0, -1.0,
+
+    // Back face
+     0.0,  0.0,  0.0,
+     1.0, -1.0, 0.0,
+    -1.0, -1.0, 0.0,
+
+    // Left face
+     0.0,  0.0,  0.0,
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0,  1.0
+    ];
+
+    this.app.GL.bufferData(this.app.GL.ARRAY_BUFFER, new Float32Array(vertices), this.app.GL.STATIC_DRAW);
+    this.playerPositionsBuffer.itemSize = 3;
+    this.playerPositionsBuffer.numItems = 12;
+
+
+    this.playerVertexColorBuffer = this.app.GL.createBuffer();
+    this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerVertexColorBuffer);
+    var colors = [
+        // Front face
+        1.0, 0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0, 1.0,
+        0.0, 0.0, 1.0, 1.0,
+
+        // Right face
+        1.0, 0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0, 1.0,
+        0.0, 1.0, 0.0, 1.0,
+
+        // Back face
+        1.0, 0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0, 1.0,
+        0.0, 0.0, 1.0, 1.0,
+
+        // Left face
+        1.0, 0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0, 1.0,
+        0.0, 1.0, 0.0, 1.0
+    ];
+    this.app.GL.bufferData(this.app.GL.ARRAY_BUFFER, new Float32Array(colors), this.app.GL.STATIC_DRAW);
+    this.playerVertexColorBuffer.itemSize = 4;
+    this.playerVertexColorBuffer.numItems = 12;
+
     //Initialize objects in the scene
     this.initObjects();
 };
@@ -393,6 +450,11 @@ Scene.prototype.initObjects = function() {
     var NUM_CUBES = 9;
     for (var i = 0; i < NUM_CUBES; i++)
         this.objects.push(new Cube(this, this.getValidObjectX(), 5 - Math.floor(Math.random() * 45)));
+    //CASEY
+    var screenCenter = this.getValidObjectX();
+    var playerDepth = -.5;
+    this.player = new Player(this, 0, playerDepth);
+
 };
 
 Scene.prototype.restart = function() {
@@ -441,6 +503,8 @@ Scene.prototype.draw = function() {
             this.objects[obj].animate();
         this.objects[obj].draw();
     }
+    //CASEY
+    this.player.draw();
 };
 
 Scene.prototype.drawCube = function() {
@@ -487,6 +551,23 @@ Scene.prototype.drawCube = function() {
     this.app.GL.drawElements(this.app.GL.TRIANGLES, this.cubeIndexBuffer.numItems, this.app.GL.UNSIGNED_SHORT, 0);
 };
 
+Scene.prototype.drawPlayer = function() {
+  
+
+    this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerPositionsBuffer);
+    this.app.GL.vertexAttribPointer(this.app.program.vertexPositionAttribute, this.playerPositionsBuffer.itemSize, this.app.GL.FLOAT, false, 0, 0);
+
+    this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerVertexColorBuffer);
+    this.app.GL.vertexAttribPointer(this.app.program.vertexColorAttribute, this.playerVertexColorBuffer.itemSize, this.app.GL.FLOAT, false, 0, 0);
+
+
+    //mat4.rotate(this.app.mvMat, degreesToRadians(90), [1, 0, 0]);
+    this.app.transferMatrixUniforms();
+    this.app.GL.drawArrays(this.app.GL.TRIANGLES, 0, this.playerPositionsBuffer.numItems);
+
+};
+
+
 function Cube(scene, startX, startZ) {
     this.x = startX;
     this.z = startZ;
@@ -518,12 +599,38 @@ Cube.prototype.animate = function() {
 };
 
 Cube.prototype.collide = function(playerX) {
-    if (this.z >= 0 && Math.abs(this.x + playerX) < 1)
+    if (this.z >= -2 && Math.abs(this.x + playerX) < 1)
     {
         return true;
     }
     return false;
 };
+
+//CASEY (next four functions)
+function Player(scene, startX, startZ) {
+    this.x = startX;
+    this.z = startZ;
+    this.scene = scene;
+}
+
+Player.prototype.draw = function() {
+    //Push a new model-view matrix onto the stack
+    this.scene.app.pushModelViewMat();
+
+    //Make any cube-specific transformations (in this case just move to x/z position)
+    mat4.translate(this.scene.app.mvMat, [this.x - this.scene.playerX, 0.0, this.z]);
+
+    // Draw the Cube
+    this.scene.drawPlayer();
+
+    this.scene.app.popModelViewMat();
+};
+
+Player.prototype.animate = function() {
+    //Shouldn't move
+};
+
+
 
 function webGLStart(canvasId) {
     app = new Application(canvasId);
