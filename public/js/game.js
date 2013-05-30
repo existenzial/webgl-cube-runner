@@ -599,7 +599,7 @@ Cube.prototype.animate = function() {
 };
 
 Cube.prototype.collide = function(playerX) {
-    if (this.z >= -2 && Math.abs(this.x + playerX) < 1)
+    if (this.z >= -2 && (Math.abs(this.x + playerX + .2) < 1 || Math.abs(this.x + playerX - .2) < 1))
     {
         return true;
     }
