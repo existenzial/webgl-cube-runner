@@ -385,7 +385,7 @@ Scene.prototype.initialize = function() {
     this.cubeIndexBuffer.itemSize = 1;
     this.cubeIndexBuffer.numItems = 36;
 
-    //CASEY, INITIALIZE PLAYER
+    //Init player
     this.playerPositionsBuffer = this.app.GL.createBuffer();
     this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerPositionsBuffer);
     var vertices = [
@@ -414,46 +414,20 @@ Scene.prototype.initialize = function() {
     this.playerPositionsBuffer.itemSize = 3;
     this.playerPositionsBuffer.numItems = 12;
 
-
-    this.playerVertexColorBuffer = this.app.GL.createBuffer();
-    this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerVertexColorBuffer);
-    var colors = [
-        // Front face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-
-        // Right face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-
-        // Back face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-
-        // Left face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0
-    ];
-    this.app.GL.bufferData(this.app.GL.ARRAY_BUFFER, new Float32Array(colors), this.app.GL.STATIC_DRAW);
-    this.playerVertexColorBuffer.itemSize = 4;
-    this.playerVertexColorBuffer.numItems = 12;
-
     //Initialize objects in the scene
     this.initObjects();
 };
 
 Scene.prototype.initObjects = function() {
     var NUM_CUBES = 9;
+    //init cubes
     for (var i = 0; i < NUM_CUBES; i++)
         this.objects.push(new Cube(this, this.getValidObjectX(), 5 - Math.floor(Math.random() * 45)));
-    //CASEY
-    var screenCenter = this.getValidObjectX();
+
+    //init player
+    var screenCenter = 0;
     var playerDepth = -.5;
-    this.player = new Player(this, 0, playerDepth);
+    this.player = new Player(this, screenCenter, playerDepth);
 
 };
 
@@ -503,7 +477,7 @@ Scene.prototype.draw = function() {
             this.objects[obj].animate();
         this.objects[obj].draw();
     }
-    //CASEY
+
     this.player.draw();
 };
 
@@ -606,7 +580,6 @@ Cube.prototype.collide = function(playerX) {
     return false;
 };
 
-//CASEY (next four functions)
 function Player(scene, startX, startZ) {
     this.x = startX;
     this.z = startZ;
