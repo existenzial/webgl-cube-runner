@@ -1,6 +1,7 @@
 var consolidate = require("consolidate"),
     express     = require("express"),
     faye        = require("faye"),
+    open        = require("open"),
     os          = require("os");
 
 var app = express();
@@ -24,4 +25,5 @@ app.get("/game", function(req, res) {
 var httpServer = app.listen(app.get("port"));
 var bayeux = new faye.NodeAdapter({mount: "/pubsub"});
 bayeux.attach(httpServer);
-console.log(baseUrl + "/game");
+
+open(baseUrl + "/game");
