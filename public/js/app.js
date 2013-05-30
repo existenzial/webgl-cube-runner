@@ -140,7 +140,6 @@ var App = {
     },
 
     onPubsubMessage: function(message) {
-        console.log("pubsub: " + JSON.stringify(message));
         this.controllerModel.set({
             alpha: parseFloat(message.alpha),
             beta:  parseFloat(message.beta),
