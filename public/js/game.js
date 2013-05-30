@@ -465,6 +465,15 @@ Scene.prototype.draw = function() {
 
     mat4.identity(this.app.mvMat);
 
+    //If the player is turning, roll the camera in that direction
+    var tiltAmount = 2.0;
+    if (currentlyPressedKeys[37] && this.paused === false) {
+        mat4.rotate(this.app.mvMat, degreesToRadians(-tiltAmount), [0, 0, 1]);
+    }
+    if (currentlyPressedKeys[39] && this.paused === false) {
+        mat4.rotate(this.app.mvMat, degreesToRadians(tiltAmount), [0, 0, 1]);
+    }
+
     //Add yaw to make camera look down
     mat4.rotate(this.app.mvMat, degreesToRadians(15), [1, 0, 0]);
     mat4.translate(this.app.mvMat, [this.playerX, -3, -5.0]);
