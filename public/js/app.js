@@ -87,6 +87,10 @@ var ScoreModel = Backbone.Model.extend({
         this.set("points", 0);
     },
 
+    getScore: function() {
+        return this.get("points");
+    },
+
     incrementScore: function(amount) {
         if (!amount) { amount = 1; }
         this.set("points", this.get("points") + amount);
@@ -129,6 +133,8 @@ var App = {
             el: $("#game-view")
         });
 
+        window.getScore = _.bind(
+            self.scoreModel.getScore, self.scoreModel);
         window.incrementScore = _.bind(
             self.scoreModel.incrementScore, self.scoreModel);
         window.resetScore = _.bind(

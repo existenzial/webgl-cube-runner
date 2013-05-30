@@ -563,7 +563,7 @@ Cube.prototype.draw = function() {
 
 Cube.prototype.animate = function() {
     //Any animations for individual cubes
-    this.z += 0.5;
+    this.z += ((0.001 * getScore()) + 0.4);
     if (this.z >= 5)
     {
         incrementScore();
