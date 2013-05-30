@@ -16,8 +16,27 @@ body {
     font-weight: bold;
 }
 
-canvas {
+#game-view-canvas {
     margin-top: 20px;
     width: 100%;
     height: 400px;
+}
+
+#game-view-placeholder {
+    margin-top: 28px;
+    background-color: black;
+    position: absolute;
+    z-index: -1;
+}
+
+#instructions-1 {
+    margin-top: 190px;
+    font-size: 125%;
+    text-align: center;
+    color: white;
+}
+
+#instructions-2
+{
+    text-align: center;
 }

@@ -526,7 +526,7 @@ Scene.prototype.drawCube = function() {
 };
 
 Scene.prototype.drawPlayer = function() {
-  
+
 
     this.app.GL.bindBuffer(this.app.GL.ARRAY_BUFFER, this.playerPositionsBuffer);
     this.app.GL.vertexAttribPointer(this.app.program.vertexPositionAttribute, this.playerPositionsBuffer.itemSize, this.app.GL.FLOAT, false, 0, 0);

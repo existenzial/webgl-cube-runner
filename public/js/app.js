@@ -48,8 +48,16 @@ var ControllerModel = Backbone.Model.extend({
 
 var GameView = Backbone.View.extend({
     initialize: function() {
-        this.$el.attr("width",  this.$el.css("width"));
-        this.$el.attr("height", this.$el.css("height"));
+        this.$canvas = this.$el.find("#game-view-canvas");
+        this.$placeholder = this.$el.find("#game-view-placeholder");
+
+        this.$canvas.attr("width",  this.$canvas.css("width"));
+        this.$canvas.attr("height", this.$canvas.css("height"));
+
+        this.$placeholder.css("width",  this.$canvas.css("width"));
+        this.$placeholder.css("height", this.$canvas.css("height"));
+        this.$placeholder.css("top",    this.$canvas.offset().top);
+        this.$placeholder.css("left",   this.$canvas.offset().left);
 
         window.requestAnimFrame = (function() {
             return window.requestAnimationFrame       ||
@@ -64,7 +72,13 @@ var GameView = Backbone.View.extend({
     },
 
     render: function() {
-        webGLStart(this.el.id);
+        var self = this;
+        $(document).keydown(function(e) {
+            if (e.keyCode === 32) {
+                $(this).off(e);
+                webGLStart(self.$canvas.attr("id"));
+            }
+        });
     }
 });
 

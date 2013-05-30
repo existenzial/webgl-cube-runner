@@ -61,11 +61,14 @@
                     <div class="row">
                         <div id="score-view"></div>
                     </div>
-                    <div class="row">
-                        <canvas id="game-view"></canvas>
+                    <div class="row" id="game-view">
+                        <canvas id="game-view-canvas"></canvas>
+                        <div id="game-view-placeholder">
+                            <div id="instructions-1">Connect your controller, then press Space to start. Good luck. </div>
+                        </div>
                     </div>
-                    <div class="row" id="instructions">
-                        Use the controller or your arrow keys to move. Press Space to restart if you die. Good luck.
+                    <div class="row" id="instructions-2">
+                        <p>Use the controller or your arrow keys to move. Press Space to restart if you die.</p>
                     </div>
                 </div>
             </div>
