@@ -434,7 +434,6 @@ Scene.prototype.draw = function() {
     {
         if (this.objects[obj].collide(this.playerX)) {
             this.paused = true;
-            stopIncrementingPoints();
         }
         if (this.paused === false)
             this.objects[obj].animate();

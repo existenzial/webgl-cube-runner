@@ -58,22 +58,22 @@ var GameView = Backbone.View.extend({
 
 var ScoreModel = Backbone.Model.extend({
     initialize: function() {
-        var self = this;
-        self.set("points", 0);
-        self.set("interval", setInterval(_.bind(self.incrementPoints, self), 100));
+        this.set("points", 0);
     },
 
-    incrementPoints: function() {
-        this.set("points", this.get("points") + 1);
+    incrementScore: function(amount) {
+        if (!amount) { amount = 1; }
+        this.set("points", this.get("points") + amount);
     },
 
-    clearInterval: function() {
-        clearInterval(this.get("interval"));
+    resetScore: function() {
+        this.set("points", 0);
     }
 });
 
 var ScoreView = Backbone.View.extend({
-    template: _.template('<div id="score"><%= points %> <%= pointsMsg %></div>'),
+    template: _.template(
+        '<div id="score"><%= points %> <%= pointsMsg %></div>'),
 
     initialize: function() {
         this.listenTo(this.model, "change", this.render);
@@ -103,12 +103,17 @@ var App = {
             el: $("#game-view")
         });
 
-        window.stopIncrementingPoints = _.bind(self.scoreModel.clearInterval, self.scoreModel);
-        window.getControllerOrientation = _.bind(self.controllerModel.orientation, self.controllerModel);
+        window.incrementScore = _.bind(
+            self.scoreModel.incrementScore, self.scoreModel);
+        window.resetScore = _.bind(
+            self.scoreModel.resetScore, self.scoreModel);
+        window.getControllerOrientation = _.bind(
+            self.controllerModel.orientation, self.controllerModel);
 
         self.pubsubClient = new Faye.Client("/pubsub");
         self.pubsubConnected = true;
-        self.pubsubSubscription = self.pubsubClient.subscribe("/controller", _.bind(self.onPubsubMessage, self));
+        self.pubsubSubscription = self.pubsubClient.subscribe(
+            "/controller", _.bind(self.onPubsubMessage, self));
         self.statusView.info("subscribing");
 
         self.pubsubSubscription.callback(function() {
