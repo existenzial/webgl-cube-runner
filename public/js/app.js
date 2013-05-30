@@ -22,7 +22,7 @@ var ControllerModel = Backbone.Model.extend({
 
         self.set({alpha: null, beta: null, gamma: null});
 
-        var threshold     = 5.0,
+        var threshold     = 10.0,
             leftArrowKey  = 37,
             rightArrowKey = 39;
 
