@@ -395,6 +395,7 @@ Scene.prototype.initObjects = function() {
 };
 
 Scene.prototype.restart = function() {
+    resetScore();
     this.objects.length = 0;
     this.initObjects();
     this.paused = false;
