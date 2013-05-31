@@ -10,7 +10,23 @@ app.set("port", 3000);
 app.use(express.static(__dirname + "/public"));
 app.engine("html", consolidate.underscore);
 
-var baseUrl = "http://" + os.hostname() + ":" + app.get("port");
+var getLocalAddress = function() {
+    var interfaces = os.networkInterfaces();
+    var addresses = [];
+    for (var key1 in interfaces) {
+        for (var key2 in interfaces[key1]) {
+            var address = interfaces[key1][key2];
+            if (address.family === "IPv4" && !address.internal) {
+                addresses.push(address.address);
+            }
+        }
+    }
+    return addresses[0];
+}
+
+var hostname = os.hostname();
+var host = hostname.indexOf(".local") !== -1 ? hostname : getLocalAddress();
+var baseUrl = "http://" + host + ":" + app.get("port");
 
 app.get("/controller", function(req, res) {
     res.render("controller.html", {});
