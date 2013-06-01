@@ -1,7 +1,7 @@
 {
-    "name": "cs174a",
+    "name": "webgl-cube-runner",
     "version": "1.0.0",
-    "description": "Group project for UCLA CS 174A",
+    "description": "WebGL Cube Runner, a group project for UCLA CS 174A",
     "contributors": [
         {"name": "Nate Emerson"},
         {"name": "Casey Patton"},
