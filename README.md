@@ -1,5 +1,7 @@
 # Cube Runner
 
+![](http://i.imgur.com/w4zLRf2.png)
+
 ## Introduction
 
 This game, a version of the classic
