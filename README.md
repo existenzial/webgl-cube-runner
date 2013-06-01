@@ -21,7 +21,7 @@ is tested to run on Windows and Mac OS X.
 
 1. Install [Git](http://git-scm.com/) and [Node.JS](http://nodejs.org/)
 2. Get the code: `git clone git://github.com/dylanvee/webgl-cube-runner.git`
-3. Go into the `CS174A` directory
+3. Go into the `webgl-cube-runner` directory
 4. Install the dependencies: `npm install`
 5. Run the server: `node server.js`
 6. A browser tab will open and the game will load. To use your smartphone as a
