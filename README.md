@@ -1,6 +1,6 @@
 # WebGL Cube Runner
 
-![](http://i.imgur.com/w4zLRf2.png)
+![](http://i.imgur.com/iDoVAzt.gif)
 
 ## Introduction
 
