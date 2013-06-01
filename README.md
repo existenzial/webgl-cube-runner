@@ -1,4 +1,4 @@
-# Cube Runner
+# WebGL Cube Runner
 
 ![](http://i.imgur.com/w4zLRf2.png)
 
@@ -20,7 +20,7 @@ is tested to run on Windows and Mac OS X.
 ## Setup instructions
 
 1. Install [Git](http://git-scm.com/) and [Node.JS](http://nodejs.org/)
-2. Get the code: `git clone git://github.com/dylanvee/CS174A.git`
+2. Get the code: `git clone git://github.com/dylanvee/webgl-cube-runner.git`
 3. Go into the `CS174A` directory
 4. Install the dependencies: `npm install`
 5. Run the server: `node server.js`
