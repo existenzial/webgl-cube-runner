@@ -24,6 +24,12 @@ var getLocalAddress = function() {
     return addresses[0];
 }
 
+var getQrCodePath = function() {
+    if (hostname === "dmv-air.local") { return "/img/qr_fallback.png"; }
+    var controllerUrlEncoded = encodeURIComponent(baseUrl + "/controller");
+    return "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" + controllerUrlEncoded + "&choe=UTF-8&chld=|0";
+}
+
 var hostname = os.hostname();
 var host = hostname.indexOf(".local") !== -1 ? hostname : getLocalAddress();
 var baseUrl = "http://" + host + ":" + app.get("port");
@@ -34,7 +40,7 @@ app.get("/controller", function(req, res) {
 
 app.get("/game", function(req, res) {
     res.render("game.html", {
-        controllerUrlEncoded: encodeURIComponent(baseUrl + "/controller")
+        qrCodePath: getQrCodePath()
     });
 });
 
